@@ -1,22 +1,28 @@
 import React, { useState } from "react";
 import "./App.css";
-import AddTodo from "./components/AddTodo";
+import Todo from "./components/Todo";
 import ListTodo from "./components/ListTodo";
-function App() {
-  const [hide, setHide] = useState(false);
 
-  const hideTodo = (val) => {
-    setHide(val);
+function App() {
+  const [mode, setMode] = useState("Add");
+  const [editId, setEditId] = useState(null);
+
+  const modeChange = (val) => {
+    setMode(val);
+  };
+
+  const onEditToggle = (val) => {
+    setEditId(val);
   };
 
   return (
     <>
       <div className="App">
-        <AddTodo hide={hide} />
+        <Todo mode={mode} modeChange={modeChange} editId={editId} />
       </div>
       <div className="ListTodo">
-        <ListTodo hideAddTodo={hideTodo} />
-      </div>
+        <ListTodo modeChange={modeChange} onEditToggle={onEditToggle} />
+      </div>      
     </>
   );
 }
