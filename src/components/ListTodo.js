@@ -27,7 +27,7 @@ const ListTodo = ({ modeChange, onEditToggle }) => {
     <>
       <ul className="todos">
         {todoList.map(
-          ({ _id, username, hobby, gender, age, date, taskName }) => {
+          ({ _id, username, hobby, gender, age, date, taskName, status }) => {
             const h = hobby.map((el) => {
               const index = checkboxes.findIndex((e) => e.id === el);
               if (index !== -1) {
@@ -35,22 +35,27 @@ const ListTodo = ({ modeChange, onEditToggle }) => {
               }
             });
             return (
-              <li className="grid" key={_id}>
-                <span className="content">{username}</span>
-                <span className="hobby">{h.join(' ')}</span>
-                <span className="gender">{gender}</span>
-                <span className="age">{age}</span>
-                <span className="date">{new Date(date).toLocaleDateString()}</span>
-                <span className="taskName">{taskName}</span>
+              <li className="flex" key={_id}>
+                <span className="todo-item">{username}</span>
+                <span className="todo-item">{h.join(" ")}</span>
+                <span className="todo-item">{gender}</span>
+                <span className="todo-item">{age}</span>
+                <span className="todo-item">
+                  {new Date(date).toLocaleDateString()}
+                </span>{" "}
+                <span className="todo-item">{taskName}</span>
+                <span className="todo-item">{status ? "Active" : "InActive"}</span>
                 <span
+                  className="todo-item"
                   onClick={() => {
                     onEditToggle(_id);
                     modeChange("Update");
                   }}
                 >
                   Edit
-                </span>
+                </span>{" "}
                 <span
+                  className="todo-item"
                   onClick={() => {
                     show();
                     setDeleteId(_id);
@@ -83,4 +88,5 @@ const ListTodo = ({ modeChange, onEditToggle }) => {
     </>
   );
 };
+
 export default ListTodo;

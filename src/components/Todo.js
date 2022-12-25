@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
-import { addTodo, listTodo } from "../store/todo-slice";
+import { addTodo, listTodo, editTodo } from "../store/todo-slice";
 
 import "react-datepicker/dist/react-datepicker.css";
 import HtmlForm from "./Form";
@@ -17,16 +17,13 @@ const Todo = ({ mode, modeChange, editId }) => {
       dispatch(listTodo());
     }
   };
-
-  const edit = () => {
-    // if (content === "") {
-    //   setState({ ...state, contentError: "You must write something!" });
-    //   return;
-    // }
-    // dispatch(
-    //   editTodo(editId, { username, age, gender, taskName, hobby, date })
-    // );
-    // setEditing(false);
+  
+  const edit = async (payload) => {
+    const response = await dispatch(editTodo({ editId, ...payload }));
+    modeChange("Add");
+    if (response.type === "todo/editTodo/fulfilled") {
+      dispatch(listTodo());
+    }
   };
 
   return (

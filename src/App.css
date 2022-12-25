@@ -21,22 +21,12 @@ body {
   background: var(--secondary);
   overflow-x: hidden;
 }
-.button {
-  background: none;
-  border: 2px solid var(--primary);
-  color: var(--primary);
-  padding: 6px 12px;
-  border-radius: 10px;
-  text-transform: uppercase;
-  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.6);
-  display: inline-block;
-  font-size: 1em;
-  margin-left: 5px;
-}
+
 .button:hover {
   color: #222;
   background: var(--primary);
 }
+
 input {
   background: rgba(255, 255, 255, 0.05);
   padding: 10px 16px;
@@ -57,10 +47,11 @@ body {
   display: flex;
   flex-direction: row;
 }
-/* mobile styles */
+
 .App {
   margin: 5%;
-  width: 30%;
+  width: 40%;
+  background-color: #f2f2f2;
 }
 
 .ListTodo {
@@ -69,12 +60,19 @@ body {
 
 .form {
   text-align: center;
+  background-color: #f2f2f2;
 }
 
 .form h2,
 .form h3,
-.form-gender label {
+.form-gender label,
+.form .select-form {
   color: black;
+}
+
+.form .select-form {
+  width: 80%;
+  margin: auto
 }
 
 .form-gender {
@@ -87,12 +85,17 @@ body {
   color: black;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 10px;
+.flex {
+  display: flex;
   box-sizing: border-box;
+  margin: 0;
+  width: 100%;
 }
+
+.todo-item {
+  flex: 1;
+}
+
 .todos {
   margin-top: 20px;
 }
@@ -103,9 +106,7 @@ body {
   box-shadow: 1px 2px 3px rgb(196, 154, 154);
   cursor: pointer;
 }
-.content {
-  grid-column: 1/8;
-}
+
 .todo-action {
   display: flex;
   font-size: 1.5em;
@@ -114,10 +115,6 @@ body {
 @media screen and (min-width: 620px) {
   input {
     width: 300px;
-  }
-  .todos li {
-    margin: 10px 20%;
-    padding: 2%;
   }
 }
 
@@ -172,9 +169,6 @@ body {
   color: #444;
 }
 
-/* p {
-  margin: 4px 0;
-} */
 .modal-footer {
   background: #eee;
   text-align: right;

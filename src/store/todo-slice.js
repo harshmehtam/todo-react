@@ -15,7 +15,6 @@ export const listTodo = createAsyncThunk("todo/getTodo", async () => {
     const data = await response.json();
     return data;
   } catch (err) {
-    // You can choose to use the message attached to err or write a custom error
     return "Opps there seems to be an error";
   }
 });
@@ -26,20 +25,26 @@ export const addTodo = createAsyncThunk("todo/addTodo", async (payload) => {
     const data = response.data;
     return data;
   } catch (err) {
-    // You can choose to use the message attached to err or write a custom error
     return "Opps there seems to be an error";
   }
 });
 
 export const editTodo = createAsyncThunk(
   "todo/editTodo",
-  async (id, payload) => {
+  async ({ editId, username, gender, hobby, date, taskName, age, status }) => {
     try {
-      const response = await axios.put(`${BASE_URL}/${id}`, payload);
+      const response = await axios.put(`${BASE_URL}/${editId}`, {
+        username,
+        gender,
+        hobby,
+        date,
+        taskName,
+        age,
+        status,
+      });
       const data = await response.data;
       return data;
     } catch (err) {
-      // You can choose to use the message attached to err or write a custom error
       return "Opps there seems to be an error";
     }
   }
@@ -51,7 +56,6 @@ export const deleteTodo = createAsyncThunk("todo/deleteTodo", async (id) => {
     const data = await response.data;
     return data;
   } catch (err) {
-    // You can choose to use the message attached to err or write a custom error
     return "Opps there seems to be an error";
   }
 });
@@ -59,6 +63,7 @@ export const deleteTodo = createAsyncThunk("todo/deleteTodo", async (id) => {
 export const todoSlice = createSlice({
   name: "todo",
   initialState,
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(listTodo.fulfilled, (state, action) => {
@@ -75,16 +80,13 @@ export const todoSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(editTodo.fulfilled, (state, action) => {
-        if (!action?.payload.response.id) {
-          console.log("could not update");
-          console.log(action.payload);
-          return;
-        }
-        // const { id } = action.payload.response;
-        // const index = state.todoList.findIndex((post) => post.id === id);
-        // state.todoList[index] = { id, ...action.payload.response };
-      });
+      // .addCase(editTodo.fulfilled, (state, action) => {
+      //   if (!action?.payload.response.id) {
+      //     console.log("could not update");
+      //     console.log(action.payload);
+      //     return;
+      //   }
+      // });
   },
 });
 

@@ -4,13 +4,14 @@ import { checkboxes } from "../constant/hobbyLists";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { options } from "../constant/statusLists";
+import RangePicker from "./RangePicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
 const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
   const [username, setUsername] = useState("");
   const [hobby, setHobby] = useState(checkboxes);
-  const [age, setAge] = useState("");
+  const [age, setAge] = useState(18);
   const [date, setDate] = useState(new Date());
   const [taskName, setTaskName] = useState("");
   const [gender, setGender] = useState("");
@@ -22,7 +23,14 @@ const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
     const index = todoList.findIndex((e) => e._id === eId);
     let data = {};
     if (index !== -1) {
-      data = todoList[index];
+      data = { ...todoList[index] };
+      data.hobby = checkboxes.map((el) => {
+        if (todoList[index].hobby.includes(el.id)) {
+          return { ...el, checked: true };
+        } else {
+          return { ...el, checked: false };
+        }
+      });
     }
     const {
       username = "",
@@ -31,7 +39,7 @@ const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
       hobby = checkboxes,
       status = "",
       taskName = "",
-      age = "",
+      age = 18,
     } = data;
     setUsername(username);
     setAge(age);
@@ -41,6 +49,16 @@ const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
     setStatus(status);
     setTaskName(taskName);
   }, [eId]);
+
+  const resetFields = () => {
+    setUsername("");
+    setAge(18);
+    setGender("");
+    setHobby(checkboxes.map((el) => ({ ...el, checked: false })));
+    setTaskName("");
+    setStatus("");
+    setDate(new Date());
+  };
 
   const onCheckError = () => {
     if (username === "") {
@@ -56,16 +74,6 @@ const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
     } else if (taskName === "") {
       return setError({ taskName: "Task Name is required" });
     }
-    setUsername("");
-    setAge("");
-    setGender("");
-    setHobby(checkboxes.map((el) => ({ ...el, checked: false })));
-    setTaskName("");
-    setStatus("");
-    setDate(new Date());
-
-    const Hobby = hobby.filter((el) => el.checked).map((el) => el.id);
-    add({ username, age, hobby: Hobby, taskName, date, status, gender });
   };
 
   return (
@@ -132,14 +140,12 @@ const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
             <input
               type="checkbox"
               onChange={() => {
-                //onCheckBoxChange(checkbox.id);
                 const curr = [...hobby];
                 curr[checkbox.id].checked = !curr[checkbox.id].checked;
                 setHobby([...curr]);
                 setError(null);
               }}
               checked={checkbox.checked}
-              // selected={hobby.includes(checkbox.id)}
             />
           </label>
         ))}
@@ -148,17 +154,7 @@ const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
         <label style={{ color: "red" }}>{error.hobby}</label>
       ) : null}
       <h3>Age</h3>
-      <input
-        type="range"
-        min="18"
-        max="55"
-        value={age}
-        onChange={(e) => {
-          setAge(e.target.value);
-          setError(null);
-        }}
-        step="1"
-      />
+      <RangePicker values={age} onValues={(val) => setAge(val[0])} />
       {error?.age ? <label style={{ color: "red" }}>{error.age}</label> : null}
       <h3>Date</h3>
       <DatePicker
@@ -179,7 +175,9 @@ const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
       {error?.taskName ? (
         <label style={{ color: "red" }}>{error.taskName}</label>
       ) : null}
+      <h3>Status</h3>
       <Select
+        className="select-form"
         onChange={(selected) => {
           setStatus(selected);
           setError(null);
@@ -191,10 +189,24 @@ const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
       ) : null}
       {type === "Add" ? (
         <button
+          style={{ marginTop: 20 }}
           disabled={error}
           type="button"
           className="button"
-          onClick={onCheckError}
+          onClick={() => {
+            onCheckError();
+            const Hobby = hobby.filter((el) => el.checked).map((el) => el.id);
+            add({
+              username,
+              age,
+              hobby: Hobby,
+              taskName,
+              date,
+              status,
+              gender,
+            });
+            resetFields();
+          }}
         >
           Add
         </button>
@@ -206,7 +218,17 @@ const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
             className="button"
             onClick={() => {
               onCheckError();
-              edit();
+              const Hobby = hobby.filter((el) => el.checked).map((el) => el.id);
+              edit({
+                username,
+                age,
+                gender,
+                status,
+                taskName,
+                date,
+                hobby: Hobby,
+              });
+              resetFields();
             }}
           >
             Edit
@@ -215,6 +237,7 @@ const HtmlForm = ({ type, edit, add, modeChange, editId: eId }) => {
             type="button"
             className="button"
             onClick={() => {
+              resetFields();
               modeChange("Add");
             }}
           >

@@ -9,6 +9,9 @@ function App() {
 
   const modeChange = (val) => {
     setMode(val);
+    if (val === "Add") {
+      setEditId(null);
+    }
   };
 
   const onEditToggle = (val) => {
@@ -22,7 +25,7 @@ function App() {
       </div>
       <div className="ListTodo">
         <ListTodo modeChange={modeChange} onEditToggle={onEditToggle} />
-      </div>      
+      </div>
     </>
   );
 }
